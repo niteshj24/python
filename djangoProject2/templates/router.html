@@ -1,0 +1,63 @@
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $("#submitBtn").click(function(){
+		var Sapid = $("#Sapid").val();
+		var hostname = $("#hostname").val();
+		var loopback = $("#loopback").val();
+		var mac_address = $("#mac_address").val();
+		var token = '2a81ce27c27ef158677824d1a556039dabcb4863';
+
+		if(Sapid.length != 18){
+			alert("sapid length should be 18"); return false;
+		}
+
+		if(hostname.length != 14){
+			alert("hostname length should be 14"); return false;
+		}
+
+		if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(loopback)) {
+
+			alert("Loopback(Ipv4)"); return false;
+		}
+
+		if(mac_address.length != 17) {
+            alert("mac_address length should be 17"); return false;
+        }
+
+
+        $.ajax
+		({
+		  type: "POST",
+		  url: "http://127.0.0.1:8000/api/routerlist/",
+		  dataType: 'json',
+		  headers: { 
+		  	'Authorization':'Token 2a81ce27c27ef158677824d1a556039dabcb4863'
+		   },
+		  data: {sapid: Sapid,hostname: hostname,macip:mac_address,loopback:loopback},
+		  success: function (data, status){
+			alert('Record has been added');
+			window.open("../","_self");
+		  }
+		});
+
+ 
+    });
+});
+</script>
+<a href='../'>Router List</a>
+<div style='width:100%'>
+<form   action="" method="post"   onsubmit=" return myFunction()">
+	{% csrf_token %}
+<table>
+<tr><td colspan='2'>Router Form</td></tr>
+<tr><td>Sapid</td><td><input type='text' name='Sapid' id='Sapid' maxlength='18' value='' required /></td></tr>
+<tr><td>hostname</td><td><input type='text' name='hostname' id='hostname' maxlength='14' value='' required /></td></tr>
+<tr><td>Loopback(Ipv4)</td><td><input type='text' name='loopback'  id='loopback' maxlength='15' value='' required /></td></tr>
+<tr><td>Mac Address</td><td><input type='text' name='mac_address'  id='mac_address' maxlength='17' value='' required /></td></tr>
+<tr><td colspan='2'><button type="button" id="submitBtn">Submit Form</button></td></tr>
+</table>
+</form>
+</div>

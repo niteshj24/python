@@ -1,0 +1,57 @@
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    
+		var token = '2a81ce27c27ef158677824d1a556039dabcb4863';
+        $.ajax
+		({
+		  type: "GET",
+		  url: "http://127.0.0.1:8000/api/routerlist/",
+		  dataType: 'json',
+		  headers: { 
+		  	'Authorization':'Token '+ token
+		   },
+		  data: {},
+		  success: function (data, status){
+		  	var tabledata = "<table><tr><th colspan='5'>Router List</th></tr><tr><th>Sapid</th><th>hostname</th><th>Loopback</th><th>Mac Address</th><th>Action</th></tr>";
+		  	if( data.length==0)
+		  	{
+		  		tabledata += "<tr><td colspan='5'>Record Not Found</td></tr>";
+		  	}
+		    for (i = 0; i < data.length; i++) {
+				  var obj = data[i];
+				  tabledata += "<tr><td>"+obj['sapid']+"</td><td>"+obj['hostname']+"</td><td>"+obj['loopback']+"</td><td>"+obj['macip']+"</td><td><a href='routeredit/"+obj['id']+"/'>Edit</a>&nbsp;<a href='javascript:deletefunction("+obj['id']+")'>Delete</a></td></tr>";
+			}
+			tabledata += "</table>";
+			$('#routerlist').html(tabledata);
+		  }
+		});
+});
+
+
+function deletefunction(id)
+{
+	var token = '2a81ce27c27ef158677824d1a556039dabcb4863';
+        $.ajax
+		({
+		  type: "Delete",
+		  url: "http://127.0.0.1:8000/api/routerlist/"+id+"/",
+		  dataType: 'json',
+		  headers: { 
+		  	'Authorization':'Token '+ token
+		   },
+		  data: {},
+		  success: function (data, status){
+		  	alert('Record has been deleted');
+		  	location.reload();
+		  }
+		});
+
+}
+</script>
+<a href='/routeradd'>Router Add Form</a>
+<div style='width:100%' id='routerlist'>
+
+</div>
